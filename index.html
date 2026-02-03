@@ -11,7 +11,7 @@
 
 <body class="relative min-h-screen bg-gradient-to-br from-pink-500 to-rose-400 flex items-center justify-center px-4 overflow-hidden">
 
-  <!-- AUDIO (musique romantique) -->
+  <!-- AUDIO -->
   <audio id="loveMusic" loop>
     <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5c3c1b45c0.mp3" type="audio/mpeg">
   </audio>
@@ -22,21 +22,23 @@
       💘 Veux-tu être ma Valentine ? 💘
     </h1>
 
-    <!-- PRENOM -->
     <p class="mb-6 text-lg">
       <span class="font-semibold">💌 Mon amour</span>,
       veux-tu partager ce mois de l’amour avec moi ?
     </p>
 
     <div class="relative flex flex-col sm:flex-row gap-4 justify-center">
+
+      <!-- OUI -->
       <button
         id="yesBtn"
-        onclick="showLove()"
+        onclick="showLoveAndRedirect()"
         class="bg-red-600 hover:bg-red-700 transition text-white font-semibold py-3 px-6 rounded-full text-lg w-full sm:w-1/2 z-10"
       >
         OUI 💖
       </button>
 
+      <!-- NON -->
       <button
         id="noBtn"
         onmouseenter="moveNoBtn()"
@@ -51,14 +53,12 @@
   <!-- OVERLAY -->
   <div id="overlay" class="fixed inset-0 bg-black/70 hidden z-40"></div>
 
-  <!-- MODAL AMOUR -->
+  <!-- MODAL -->
   <div id="loveModal" class="fixed inset-0 hidden z-50 flex items-center justify-center px-4">
     <div class="relative w-full max-w-md bg-gradient-to-br from-pink-500 to-rose-400 rounded-2xl p-8 text-center text-white shadow-2xl overflow-hidden">
-
       <h2 class="text-3xl font-bold mb-3">
         💖 Merci mon amour 💖
       </h2>
-
       <p class="text-lg mb-4">
         Tu viens de rendre mon cœur le plus heureux du monde 🌹
       </p>
@@ -68,7 +68,7 @@
     </div>
   </div>
 
-  <!-- ANIMATIONS -->
+  <!-- STYLES ANIMATIONS -->
   <style>
     @keyframes floatUp {
       to {
@@ -81,70 +81,62 @@
       bottom: -20px;
       animation: floatUp linear forwards;
     }
-    @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-5px); }
-}
-.shake {
-  animation: shake 0.4s;
-}
-
   </style>
 
+  <!-- SCRIPT -->
   <script>
     let scale = 1;
 
-// Bouton NON → OUI grossit
-function growYes() {
-  scale += 0.15;
-  if (scale > 3.2) scale = 3.2;
+    function growYes() {
+      scale += 0.15;
+      if (scale > 3.2) scale = 3.2;
+      document.getElementById("yesBtn").style.transform = `scale(${scale})`;
+    }
 
-  document.getElementById("yesBtn").style.transform = `scale(${scale})`;
-}
+    function moveNoBtn() {
+      const noBtn = document.getElementById("noBtn");
+      const x = Math.random() * 120 - 10;
+      const y = Math.random() * 120 - 10;
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    }
 
-// Bouton NON fuit le doigt 😈
-function moveNoBtn() {
-  const noBtn = document.getElementById("noBtn");
-  const x = Math.random() * 120 - 10;
-  const y = Math.random() * 120 - 10;
-  noBtn.style.transform = `translate(${x}px, ${y}px)`;
-}
+    function showLoveAndRedirect() {
+      showLove();
+      setTimeout(() => {
+        window.location.href = "second.html";
+      }, 2800);
+    }
 
-// Quand elle clique OUI 💖
-function showLove() {
-  document.getElementById("overlay").classList.remove("hidden");
-  document.getElementById("loveModal").classList.remove("hidden");
+    function showLove() {
+      document.getElementById("overlay").classList.remove("hidden");
+      document.getElementById("loveModal").classList.remove("hidden");
 
-  // Musique 🎶
-  document.getElementById("loveMusic").play();
+      document.getElementById("loveMusic").play();
 
-  // Vibration 📳
-  if (navigator.vibrate) {
-    navigator.vibrate([300, 100, 300]);
-  }
+      if (navigator.vibrate) {
+        navigator.vibrate([300, 100, 300]);
+      }
 
-  startAnimations();
-}
+      startAnimations();
+    }
 
-// Coeurs + fleurs 🌹❤️
-function startAnimations() {
-  const container = document.getElementById("animations");
+    function startAnimations() {
+      const container = document.getElementById("animations");
 
-  setInterval(() => {
-    const el = document.createElement("div");
-    el.className = "float";
-    el.innerText = Math.random() > 0.5 ? "❤️" : "🌹";
-    el.style.left = Math.random() * 100 + "%";
-    el.style.fontSize = (Math.random() * 20 + 20) + "px";
-    el.style.animationDuration = (Math.random() * 3 + 3) + "s";
+      const interval = setInterval(() => {
+        const el = document.createElement("div");
+        el.className = "float";
+        el.innerText = Math.random() > 0.5 ? "❤️" : "🌹";
+        el.style.left = Math.random() * 100 + "%";
+        el.style.fontSize = (Math.random() * 20 + 20) + "px";
+        el.style.animationDuration = (Math.random() * 3 + 3) + "s";
 
-    container.appendChild(el);
-    setTimeout(() => el.remove(), 6000);
-  }, 250);
-}
+        container.appendChild(el);
+        setTimeout(() => el.remove(), 6000);
+      }, 250);
 
+      setTimeout(() => clearInterval(interval), 2500);
+    }
   </script>
 </body>
 </html>
