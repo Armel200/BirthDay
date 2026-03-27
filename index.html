@@ -1,142 +1,77 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ma Valentine 💖</title>
-
-  <!-- Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBD Alexia U17</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .cursive { font-family: 'Dancing+Script', cursive; }
+    </style>
 </head>
+<body class="bg-pink-50 min-h-screen flex flex-col items-center justify-center overflow-hidden relative">
 
-<body class="relative min-h-screen bg-gradient-to-br from-pink-500 to-rose-400 flex items-center justify-center px-4 overflow-hidden">
+    <div class="absolute top-10 left-10 w-32 h-32 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+    <div class="absolute bottom-10 right-10 w-32 h-32 bg-rose-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
 
-  <!-- AUDIO -->
-  <audio id="loveMusic" loop>
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5c3c1b45c0.mp3" type="audio/mpeg">
-  </audio>
+    <div class="z-10 text-center px-4">
+        <h2 id="typewriter1" class="text-2xl text-rose-400 font-light mb-2 h-8"></h2>
+        <h1 id="typewriter2" class="text-4xl md:text-6xl font-bold text-rose-600 cursive mb-8"></h1>
 
-  <!-- CONTENU PRINCIPAL -->
-  <div class="w-full max-w-md bg-white/20 backdrop-blur-lg rounded-2xl p-6 text-center text-white shadow-xl">
-    <h1 class="text-2xl sm:text-3xl font-bold mb-4">
-      💘 Veux-tu être ma Valentine ? 💘
-    </h1>
-
-    <p class="mb-6 text-lg">
-      <span class="font-semibold">💌 Mon amour</span>,
-      veux-tu partager ce mois de l’amour avec moi ?
-    </p>
-
-    <div class="relative flex flex-col sm:flex-row gap-4 justify-center">
-
-      <!-- OUI -->
-      <button
-        id="yesBtn"
-        onclick="showLoveAndRedirect()"
-        class="bg-red-600 hover:bg-red-700 transition text-white font-semibold py-3 px-6 rounded-full text-lg w-full sm:w-1/2 z-10"
-      >
-        OUI 💖
-      </button>
-
-      <!-- NON -->
-      <button
-        id="noBtn"
-        onmouseenter="moveNoBtn()"
-        onclick="growYes()"
-        class="bg-white text-red-600 font-semibold py-3 px-6 rounded-full text-lg w-full sm:w-1/2"
-      >
-        NON 😅
-      </button>
+        <div id="btn-container" class="opacity-0 transition-opacity duration-1000">
+            <a href="parcours.html" class="bg-rose-500 hover:bg-rose-600 text-white px-8 py-3 rounded-full shadow-lg transform transition hover:scale-105 inline-block font-semibold">
+                Continuer le voyage ✨
+            </a>
+        </div>
     </div>
-  </div>
 
-  <!-- OVERLAY -->
-  <div id="overlay" class="fixed inset-0 bg-black/70 hidden z-40"></div>
+    <script>
+        const text1 = "Bonjourr U17...";
+        const text2 = "Joyeux Anniversaire Alexia 🎉!";
+        
+        function typeWriter(text, elementId, speed, callback) {
+            let i = 0;
+            const elem = document.getElementById(elementId);
+            function type() {
+                if (i < text.length) {
+                    elem.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                } else if (callback) {
+                    callback();
+                }
+            }
+            type();
+        }
 
-  <!-- MODAL -->
-  <div id="loveModal" class="fixed inset-0 hidden z-50 flex items-center justify-center px-4">
-    <div class="relative w-full max-w-md bg-gradient-to-br from-pink-500 to-rose-400 rounded-2xl p-8 text-center text-white shadow-2xl overflow-hidden">
-      <h2 class="text-3xl font-bold mb-3">
-        💖 Merci mon amour 💖
-      </h2>
-      <p class="text-lg mb-4">
-        Tu viens de rendre mon cœur le plus heureux du monde 🌹
-      </p>
+        // Lancement de la séquence
+        window.onload = () => {
+            typeWriter(text1, "typewriter1", 100, () => {
+                setTimeout(() => {
+                    typeWriter(text2, "typewriter2", 100, () => {
+                        // Explosion de joie !
+                        launchFirework();
+                        document.getElementById('btn-container').classList.remove('opacity-0');
+                    });
+                }, 500);
+            });
+        };
 
-      <!-- Animations -->
-      <div id="animations" class="absolute inset-0 pointer-events-none"></div>
-    </div>
-  </div>
+        function launchFirework() {
+            var duration = 5 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-  <!-- STYLES ANIMATIONS -->
-  <style>
-    @keyframes floatUp {
-      to {
-        transform: translateY(-120vh);
-        opacity: 0;
-      }
-    }
-    .float {
-      position: absolute;
-      bottom: -20px;
-      animation: floatUp linear forwards;
-    }
-  </style>
-
-  <!-- SCRIPT -->
-  <script>
-    let scale = 1;
-
-    function growYes() {
-      scale += 0.15;
-      if (scale > 3.2) scale = 3.2;
-      document.getElementById("yesBtn").style.transform = `scale(${scale})`;
-    }
-
-    function moveNoBtn() {
-      const noBtn = document.getElementById("noBtn");
-      const x = Math.random() * 120 - 10;
-      const y = Math.random() * 120 - 10;
-      noBtn.style.transform = `translate(${x}px, ${y}px)`;
-    }
-
-    function showLoveAndRedirect() {
-      showLove();
-      setTimeout(() => {
-        window.location.href = "second.html";
-      }, 2800);
-    }
-
-    function showLove() {
-      document.getElementById("overlay").classList.remove("hidden");
-      document.getElementById("loveModal").classList.remove("hidden");
-
-      document.getElementById("loveMusic").play();
-
-      if (navigator.vibrate) {
-        navigator.vibrate([300, 100, 300]);
-      }
-
-      startAnimations();
-    }
-
-    function startAnimations() {
-      const container = document.getElementById("animations");
-
-      const interval = setInterval(() => {
-        const el = document.createElement("div");
-        el.className = "float";
-        el.innerText = Math.random() > 0.5 ? "❤️" : "🌹";
-        el.style.left = Math.random() * 100 + "%";
-        el.style.fontSize = (Math.random() * 20 + 20) + "px";
-        el.style.animationDuration = (Math.random() * 3 + 3) + "s";
-
-        container.appendChild(el);
-        setTimeout(() => el.remove(), 6000);
-      }, 250);
-
-      setTimeout(() => clearInterval(interval), 2500);
-    }
-  </script>
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+                var particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: Math.random(), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+    </script>
 </body>
 </html>

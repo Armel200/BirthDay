@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Parcours des Souvenirs - U17</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .cursive { font-family: 'Dancing Script', cursive; }
+        .card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 192, 203, 0.3);
+            transition: all 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-pink-50 to-rose-100 min-h-screen flex flex-col items-center py-10 px-4 relative">
+
+    <a href="parcours.html" class="fixed top-6 left-6 flex items-center text-rose-500 hover:text-rose-700 transition-colors font-medium z-10">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+        </svg>
+        Retour
+    </a>
+
+    <h1 class="text-4xl md:text-5xl font-bold text-rose-600 cursive mb-10 text-center drop-shadow-md">Ton Parcours des Souvenirs ✨</h1>
+     <p class="text-rose-700 text-lg mb-12 text-center max-w-xl">
+
+        Réponds correctement aux questions pour débloquer les secrets de nos moments inoubliables !
+
+    </p>
+    
+    <div id="game-container" class="space-y-8 w-full max-w-md">
+        </div>
+
+    <div id="final-message" class="card p-8 rounded-3xl shadow-xl text-center mt-12 hidden opacity-0 transition-opacity duration-1000 w-full max-w-md">
+        <h2 class="text-3xl font-bold text-rose-600 cursive mb-4">Bravo, Championne ! 🎉</h2>
+        <p class="text-gray-700 text-lg mb-6">Chaque moment avec toi est précieux. Merci d'être mon "U17" préféré.</p>
+        <div class="mt-8">
+            <img src="https://via.placeholder.com/300x200?text=Photo+Souvenir" class="rounded-xl shadow-md mx-auto w-full h-auto mb-4">
+        </div>
+        <a href="parcours.html" class="inline-block mt-4 bg-rose-500 text-white px-6 py-2 rounded-full">Retour au menu</a>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Quelle est le truc que j'aime le plus chez toi ?",
+                answer: "mes pieds",
+                clue: "Je te le dis presque tout le temps... bonn pas tout le temps mais je m'en fou man",
+                reveal: "C'est beau, propre et joli, rien à dire ! ✨"
+            },
+            {
+                question: "Lieu de notre plus grosse 'embrouille silencieuse' (3 jours) ?",
+                answer: "bibliotheque",
+                clue: "Un lieu rempli de livres...",
+                reveal: "La bibliothèque ! Le lieu des tensions et des réconciliations. 😂"
+            },
+            {
+                question: "Le plat que je commande (ou prépare) le mieux ?",
+                answer: "pizza",
+                clue: "C'est rond, italien et ça se partage.",
+                reveal: "La pizza ! La trêve après nos petites guerres. 🍕"
+            },
+            {
+                question: "Notre code secret pour stopper une dispute ?",
+                answer: "ananas",
+                clue: "Un fruit exotique piquant.",
+                reveal: "L'ananas ! Le mot magique qui désamorce tout. 🍍"
+            },
+            {
+                question: "Notre amitié en un emoji ?",
+                answer: "❤️‍🩹",
+                clue: "Un cœur avec un bandage.",
+                reveal: "C'est nous ! On se blesse mais on se soigne toujours. ❤️‍🩹"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+
+        function renderQuestion() {
+            const container = document.getElementById('game-container');
+            if (currentQuestionIndex >= questions.length) {
+                showFinalMessage();
+                return;
+            }
+
+            const q = questions[currentQuestionIndex];
+            container.innerHTML = `
+                <div class="card p-6 md:p-8 rounded-2xl shadow-lg border-rose-200 border">
+                    <h3 class="text-xl font-semibold text-rose-500 mb-4">Question ${currentQuestionIndex + 1} / ${questions.length}</h3>
+                    <p class="text-gray-700 text-lg mb-6">${q.question}</p>
+                    <input type="text" id="answer-input" placeholder="Ta réponse..." 
+                        class="w-full border-2 border-rose-200 rounded-xl px-4 py-3 mb-4 focus:outline-none focus:border-rose-500">
+                    <button id="btn-valider" class="w-full bg-rose-500 text-white py-3 rounded-xl font-bold shadow-md hover:bg-rose-600 transition-colors">
+                        Valider
+                    </button>
+                    <p id="clue-btn" class="text-sm text-rose-400 hover:text-rose-600 mt-4 cursor-pointer text-center underline italic">Besoin d'un indice ?</p>
+                    <p id="clue-text" class="text-sm text-gray-500 mt-2 hidden text-center italic"></p>
+                    <p id="feedback" class="mt-4 font-semibold text-center"></p>
+                </div>
+            `;
+
+            // On attache les événements après avoir créé les éléments
+            document.getElementById('btn-valider').onclick = checkAnswer;
+            
+            // Permettre de valider avec la touche "Entrée"
+            document.getElementById('answer-input').onkeypress = (e) => {
+                if (e.key === 'Enter') checkAnswer();
+            };
+
+            document.getElementById('clue-btn').onclick = () => {
+                document.getElementById('clue-text').textContent = q.clue;
+                document.getElementById('clue-text').classList.toggle('hidden');
+            };
+        }
+
+        function checkAnswer() {
+            const input = document.getElementById('answer-input');
+            const feedback = document.getElementById('feedback');
+            const q = questions[currentQuestionIndex];
+            
+            if (!input || !q) return;
+
+            const userAnswer = input.value.toLowerCase().trim();
+
+            if (userAnswer === q.answer.toLowerCase()) {
+                feedback.innerHTML = "Bonne réponse ! 🎉";
+                feedback.className = "mt-4 text-green-500 animate-bounce font-bold";
+                input.disabled = true;
+                
+                setTimeout(() => {
+                    alert(q.reveal);
+                    currentQuestionIndex++;
+                    renderQuestion();
+                }, 1000);
+            } else {
+                feedback.innerHTML = "Mmmh, non... Réessaie ! 🤔";
+                feedback.className = "mt-4 text-red-400 font-bold";
+                input.classList.add('border-red-300');
+                setTimeout(() => input.classList.remove('border-red-300'), 500);
+            }
+        }
+
+        function showFinalMessage() {
+            document.getElementById('game-container').classList.add('hidden');
+            const final = document.getElementById('final-message');
+            final.classList.remove('hidden');
+            setTimeout(() => final.classList.remove('opacity-0'), 100);
+        }
+
+        window.onload = renderQuestion;
+    </script>
+</body>
+</html>

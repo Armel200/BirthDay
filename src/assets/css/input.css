@@ -2,3 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+        /* Ajustements mineurs pour la fluidité */
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
