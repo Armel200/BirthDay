@@ -44,6 +44,12 @@
         <div id="result-icon" class="text-6xl mb-4"></div>
         <h2 id="result-title" class="text-3xl font-bold text-rose-600 cursive mb-4"></h2>
         <p id="result-text" class="text-gray-700 text-lg mb-6"></p>
+        
+        <div id="recap-responses" class="text-left bg-white/50 p-4 rounded-2xl mb-6 text-sm border border-rose-100">
+            <h3 class="font-bold text-rose-500 mb-2 border-bottom">Tes pépites du jour :</h3>
+            <ul id="answers-list" class="space-y-2 italic text-gray-600"></ul>
+        </div>
+
         <div class="bg-rose-100 py-3 rounded-xl mb-6">
             <p class="text-2xl font-bold text-rose-600">Score Final : <span id="final-score"></span> / 6</p>
         </div>
@@ -52,35 +58,35 @@
 
     <script>
         const questions = [
-            {
-                question: "En quelle année a débuté la Révolution française ?",
-                answer: "1789",
-                clue: "C'est au 18ème siècle, l'année de la prise de la Bastille.",
-                subject: "Histoire"
+           {
+                question: "Si tu pouvais te téléporter n'importe où pour fêter ton anniversaire là tout de suite, tu irais où ?",
+                answer: "plage",
+                clue: "Pense à une plage, une ville animée ou même un festival !",
+                subject: "Voyage & Rêves"
             },
             {
-                question: "Qui a écrit 'L'Étranger' ?",
-                answer: "albert camus",
-                clue: "Un auteur pied-noir, prix Nobel de littérature.",
-                subject: "Littérature"
+                question: "Quel est le cadeau le plus improbable (ou le plus nul) que tu as reçu dans ta vie ?",
+                answer: "montre",
+                clue: "On a tous eu un jour ce pull qui gratte ou cet objet bizarre...",
+                subject: "Souvenirs"
             },
             {
-                question: "Quel philosophe est l'auteur du concept de 'l'allégorie de la caverne' ?",
-                answer: "platon",
-                clue: "Le plus célèbre élève de Socrate.",
-                subject: "Philosophie"
+                question: "Si on devait créer un parfum de glace spécial pour tes 17 ans, il y aurait quoi dedans ?",
+                answer: "Chocolat",
+                clue: "Sois créative : chocolat-piment, cookie-marshmallow, ou un truc sain ?",
+                subject: "Gourmandise"
             },
             {
-                question: "Quel est le symbole chimique de l'Or ?",
-                answer: "au",
-                clue: "Vient du latin 'Aurum'.",
-                subject: "Sciences"
+                question: "C'est quoi la chanson que tu écoutes en boucle en ce moment (celle que tu n'avoues pas forcément) ?",
+                answer: "gims",
+                clue: "On ne juge pas, promis ! Même si c'est du vieux disco.",
+                subject: "Musique"
             },
             {
-                question: "Quelle est la capitale de l'Australie ?",
-                answer: "canberra",
-                clue: "Ce n'est ni Sydney, ni Melbourne !",
-                subject: "Géographie"
+                question: "Si tu devenais une célébrité demain, pour quelle raison est-ce que tu serais connue ?",
+                answer: "beaute",
+                clue: "Actrice oscarisée, gameuse pro, ou celle qui a inventé le distributeur de tacos ?",
+                subject: "Délires"
             },
             {
                 question: "et pour terminer , Quelle est ton pire voisin dans ce quartier?",
@@ -93,6 +99,7 @@
         let currentQuestionIndex = 0;
         let score = 0;
         let attempts = 0;
+        let userAnswers = []; // Nouveau : pour stocker les réponses
 
         function renderQuestion() {
             const container = document.getElementById('game-container');
@@ -136,9 +143,13 @@
             const input = document.getElementById('answer-input');
             const feedback = document.getElementById('feedback');
             const q = questions[currentQuestionIndex];
-            const userAnswer = input.value.toLowerCase().trim();
+            const rawAnswer = input.value;
+            const userAnswer = rawAnswer.toLowerCase().trim();
 
-            if (userAnswer === q.answer.toLowerCase()) {
+            // On enregistre la réponse donnée (même si c'est faux ou vide)
+            userAnswers[currentQuestionIndex] = rawAnswer || "Pas de réponse 🙊";
+
+            if (q.answer === "libre" || userAnswer === q.answer.toLowerCase()) {
                 score++;
                 document.getElementById('live-score').textContent = score;
                 feedback.innerHTML = "ikiiii.. +1 point 🌟";
@@ -178,24 +189,27 @@
             const icon = document.getElementById('result-icon');
             const title = document.getElementById('result-title');
             const text = document.getElementById('result-text');
+            const listContainer = document.getElementById('answers-list');
             
+            // Génération de la liste des réponses
+            listContainer.innerHTML = questions.map((q, index) => 
+                `<li><span class="text-rose-400">•</span> ${userAnswers[index]}</li>`
+            ).join('');
+
             document.getElementById('final-score').textContent = score;
             final.classList.remove('hidden');
             setTimeout(() => final.classList.remove('opacity-0'), 100);
 
             if (score > 3) {
-                // VICTOIRE - FEUX D'ARTIFICE
                 icon.innerHTML = "👑";
                 title.innerHTML = "Bravo Fillette !";
                 text.innerHTML = "mm comme c'etait facil mais bon et aussi (on est pas amis)";
                 launchFireworks();
             } else if (score === 3) {
-                // MOYENNE - FELICITATIONS
                 icon.innerHTML = "⚖️";
                 title.innerHTML = "Pas mal !";
                 text.innerHTML = "tu peux faire mieux man tu es quand quelqu'un marche avec moi le minimum c'est etre inteligent ";
             } else {
-                // ECHEC - PLEURS
                 icon.innerHTML = "😭";
                 icon.classList.add('cry-animation');
                 title.innerHTML = "je savais man tu es harrd 😒😂";
