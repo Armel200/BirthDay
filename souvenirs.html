@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Culture Générale - Terminale</title>
+    <title>Quiz U17 - Spécial Anniversaire</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -46,8 +46,8 @@
         <p id="result-text" class="text-gray-700 text-lg mb-6"></p>
         
         <div id="recap-responses" class="text-left bg-white/50 p-4 rounded-2xl mb-6 text-sm border border-rose-100">
-            <h3 class="font-bold text-rose-500 mb-2 border-bottom">Tes pépites du jour :</h3>
-            <ul id="answers-list" class="space-y-2 italic text-gray-600"></ul>
+            <h3 class="font-bold text-rose-500 mb-2">Les réponses qui t'ont depassees</h3>
+            <ul id="answers-list" class="space-y-3 text-gray-700"></ul>
         </div>
 
         <div class="bg-rose-100 py-3 rounded-xl mb-6">
@@ -77,7 +77,7 @@
                 subject: "Gourmandise"
             },
             {
-                question: "C'est quoi ton film ou serie le plus bizzare que jai deja eu a t'envoyer  ?",
+                question: "C'est quoi ton film ou serie le plus bizzare que jai deja eu a t'envoyer ?",
                 answer: "After",
                 clue: "On ne juge pas, promis ! Même si c'est un peu erhotique.",
                 subject: "Film & Serie"
@@ -99,7 +99,6 @@
         let currentQuestionIndex = 0;
         let score = 0;
         let attempts = 0;
-        let userAnswers = []; // Nouveau : pour stocker les réponses
 
         function renderQuestion() {
             const container = document.getElementById('game-container');
@@ -143,13 +142,9 @@
             const input = document.getElementById('answer-input');
             const feedback = document.getElementById('feedback');
             const q = questions[currentQuestionIndex];
-            const rawAnswer = input.value;
-            const userAnswer = rawAnswer.toLowerCase().trim();
+            const userAnswer = input.value.toLowerCase().trim();
 
-            // On enregistre la réponse donnée (même si c'est faux ou vide)
-            userAnswers[currentQuestionIndex] = rawAnswer || "Pas de réponse 🙊";
-
-            if (q.answer === "libre" || userAnswer === q.answer.toLowerCase()) {
+            if (userAnswer === q.answer.toLowerCase()) {
                 score++;
                 document.getElementById('live-score').textContent = score;
                 feedback.innerHTML = "ikiiii.. +1 point 🌟";
@@ -159,7 +154,7 @@
             } else {
                 attempts++;
                 if (attempts >= 2) {
-                    feedback.innerHTML = "Pfff...  passe à la suivante 😂";
+                    feedback.innerHTML = "Pfff... passe à la suivante 😂";
                     feedback.className = "mt-4 text-orange-500 font-bold";
                     input.classList.add('border-orange-400');
                     proceed();
@@ -191,9 +186,12 @@
             const text = document.getElementById('result-text');
             const listContainer = document.getElementById('answers-list');
             
-            // Génération de la liste des réponses
+            // On affiche ici les BONNES réponses définies dans l'objet questions
             listContainer.innerHTML = questions.map((q, index) => 
-                `<li><span class="text-rose-400">•</span> ${userAnswers[index]}</li>`
+                `<li>
+                    <p class="font-semibold text-rose-600">Q${index + 1}. ${q.question}</p>
+                    <p class="italic text-gray-600">Réponse attendue : <span class="text-green-600 font-bold">${q.answer}</span></p>
+                </li>`
             ).join('');
 
             document.getElementById('final-score').textContent = score;
