@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Le Parcours des Souvenirs - U17</title>
+    <title>Quiz Culture Générale - Terminale</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Poppins', sans-serif; }
@@ -14,6 +15,11 @@
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 192, 203, 0.3);
             transition: all 0.3s ease-in-out;
+        }
+        .cry-animation { animation: shake 0.5s infinite; }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            100% { transform: translate(-1px, -2px) rotate(-1deg); }
         }
     </style>
 </head>
@@ -26,60 +32,67 @@
         Retour
     </a>
 
-    <h1 class="text-4xl md:text-5xl font-bold text-rose-600 cursive mb-10 text-center drop-shadow-md">Ton Parcours des Souvenirs ✨</h1>
-     <p class="text-rose-700 text-lg mb-12 text-center max-w-xl">
-
-        Réponds correctement aux questions pour débloquer les secrets de nos moments inoubliables !
-
+    <h1 class="text-4xl md:text-5xl font-bold text-rose-600 cursive mb-4 text-center">Défi Culture Bac 🎓</h1>
+    <p class="text-rose-700 text-lg mb-8 text-center max-w-xl">
+        Montre que tu es prête pour le Bac ! <br>
+        <span class="text-sm font-normal">Score actuel : <span id="live-score" class="font-bold">0</span> / 6</span>
     </p>
     
-    <div id="game-container" class="space-y-8 w-full max-w-md">
-        </div>
+    <div id="game-container" class="space-y-8 w-full max-w-md"></div>
 
     <div id="final-message" class="card p-8 rounded-3xl shadow-xl text-center mt-12 hidden opacity-0 transition-opacity duration-1000 w-full max-w-md">
-        <h2 class="text-3xl font-bold text-rose-600 cursive mb-4">Bravo, Championne ! 🎉</h2>
-        <p class="text-gray-700 text-lg mb-6">Chaque moment avec toi est précieux. Merci d'être mon "U17" préféré.</p>
-        <div class="mt-8">
-            <img src="https://via.placeholder.com/300x200?text=Photo+Souvenir" class="rounded-xl shadow-md mx-auto w-full h-auto mb-4">
+        <div id="result-icon" class="text-6xl mb-4"></div>
+        <h2 id="result-title" class="text-3xl font-bold text-rose-600 cursive mb-4"></h2>
+        <p id="result-text" class="text-gray-700 text-lg mb-6"></p>
+        <div class="bg-rose-100 py-3 rounded-xl mb-6">
+            <p class="text-2xl font-bold text-rose-600">Score Final : <span id="final-score"></span> / 6</p>
         </div>
-        <a href="parcours.html" class="inline-block mt-4 bg-rose-500 text-white px-6 py-2 rounded-full">Retour au menu</a>
+        <a href="parcours.html" class="inline-block bg-rose-500 text-white px-8 py-3 rounded-full shadow-lg hover:bg-rose-600 transition-all">Retour au voyage</a>
     </div>
 
     <script>
         const questions = [
             {
-                question: "Quelle est le truc que j'aime le plus chez toi ?",
-                answer: "mes pieds",
-                clue: "Je te le dis presque tout le temps... bonn pas tout le temps mais je m'en fou man",
-                reveal: "C'est beau, propre et joli, rien à dire ! ✨"
+                question: "En quelle année a débuté la Révolution française ?",
+                answer: "1789",
+                clue: "C'est au 18ème siècle, l'année de la prise de la Bastille.",
+                subject: "Histoire"
             },
             {
-                question: "Lieu de notre plus grosse 'embrouille silencieuse' (3 jours) ?",
-                answer: "bibliotheque",
-                clue: "Un lieu rempli de livres...",
-                reveal: "La bibliothèque ! Le lieu des tensions et des réconciliations. 😂"
+                question: "Qui a écrit 'L'Étranger' ?",
+                answer: "albert camus",
+                clue: "Un auteur pied-noir, prix Nobel de littérature.",
+                subject: "Littérature"
             },
             {
-                question: "Le plat que je commande (ou prépare) le mieux ?",
-                answer: "pizza",
-                clue: "C'est rond, italien et ça se partage.",
-                reveal: "La pizza ! La trêve après nos petites guerres. 🍕"
+                question: "Quel philosophe est l'auteur du concept de 'l'allégorie de la caverne' ?",
+                answer: "platon",
+                clue: "Le plus célèbre élève de Socrate.",
+                subject: "Philosophie"
             },
             {
-                question: "Notre code secret pour stopper une dispute ?",
-                answer: "ananas",
-                clue: "Un fruit exotique piquant.",
-                reveal: "L'ananas ! Le mot magique qui désamorce tout. 🍍"
+                question: "Quel est le symbole chimique de l'Or ?",
+                answer: "au",
+                clue: "Vient du latin 'Aurum'.",
+                subject: "Sciences"
             },
             {
-                question: "Notre amitié en un emoji ?",
-                answer: "❤️‍🩹",
-                clue: "Un cœur avec un bandage.",
-                reveal: "C'est nous ! On se blesse mais on se soigne toujours. ❤️‍🩹"
+                question: "Quelle est la capitale de l'Australie ?",
+                answer: "canberra",
+                clue: "Ce n'est ni Sydney, ni Melbourne !",
+                subject: "Géographie"
+            },
+            {
+                question: "et pour terminer , Quelle est ton pire voisin dans ce quartier?",
+                answer: "Armel",
+                clue: "essaie mm pas de dire mon nom",
+                subject: "bonus!😆"
             }
         ];
 
         let currentQuestionIndex = 0;
+        let score = 0;
+        let attempts = 0;
 
         function renderQuestion() {
             const container = document.getElementById('game-container');
@@ -90,66 +103,116 @@
 
             const q = questions[currentQuestionIndex];
             container.innerHTML = `
-                <div class="card p-6 md:p-8 rounded-2xl shadow-lg border-rose-200 border">
-                    <h3 class="text-xl font-semibold text-rose-500 mb-4">Question ${currentQuestionIndex + 1} / ${questions.length}</h3>
-                    <p class="text-gray-700 text-lg mb-6">${q.question}</p>
+                <div class="card p-6 md:p-8 rounded-2xl shadow-lg border-rose-200 border transform transition-all">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="bg-rose-100 text-rose-600 text-xs font-bold px-2 py-1 rounded uppercase">${q.subject}</span>
+                        <span class="text-rose-400 text-sm">Question ${currentQuestionIndex + 1}/6</span>
+                    </div>
+                    <p class="text-gray-700 text-lg mb-6 font-medium">${q.question}</p>
                     <input type="text" id="answer-input" placeholder="Ta réponse..." 
-                        class="w-full border-2 border-rose-200 rounded-xl px-4 py-3 mb-4 focus:outline-none focus:border-rose-500">
-                    <button id="btn-valider" class="w-full bg-rose-500 text-white py-3 rounded-xl font-bold shadow-md hover:bg-rose-600 transition-colors">
-                        Valider
+                        class="w-full border-2 border-rose-200 rounded-xl px-4 py-3 mb-2 focus:outline-none focus:border-rose-500 transition-all">
+                    <p class="text-xs text-rose-400 mb-4 ml-1 italic" id="attempts-left">Tentative : ${attempts + 1} / 2</p>
+                    
+                    <button id="btn-valider" class="w-full bg-rose-500 text-white py-3 rounded-xl font-bold shadow-md hover:bg-rose-600 transition-all active:scale-95">
+                        Valider la réponse
                     </button>
-                    <p id="clue-btn" class="text-sm text-rose-400 hover:text-rose-600 mt-4 cursor-pointer text-center underline italic">Besoin d'un indice ?</p>
-                    <p id="clue-text" class="text-sm text-gray-500 mt-2 hidden text-center italic"></p>
-                    <p id="feedback" class="mt-4 font-semibold text-center"></p>
+                    
+                    <button id="clue-btn" class="w-full mt-3 text-sm text-rose-400 hover:text-rose-600 underline italic">Indice ?</button>
+                    <p id="clue-text" class="text-sm text-gray-500 mt-2 hidden text-center italic bg-white/50 p-2 rounded"></p>
+                    <p id="feedback" class="mt-4 font-semibold text-center h-6"></p>
                 </div>
             `;
 
-            // On attache les événements après avoir créé les éléments
             document.getElementById('btn-valider').onclick = checkAnswer;
-            
-            // Permettre de valider avec la touche "Entrée"
-            document.getElementById('answer-input').onkeypress = (e) => {
-                if (e.key === 'Enter') checkAnswer();
-            };
-
+            document.getElementById('answer-input').onkeypress = (e) => { if (e.key === 'Enter') checkAnswer(); };
             document.getElementById('clue-btn').onclick = () => {
                 document.getElementById('clue-text').textContent = q.clue;
                 document.getElementById('clue-text').classList.toggle('hidden');
             };
+            document.getElementById('answer-input').focus();
         }
 
         function checkAnswer() {
             const input = document.getElementById('answer-input');
             const feedback = document.getElementById('feedback');
             const q = questions[currentQuestionIndex];
-            
-            if (!input || !q) return;
-
             const userAnswer = input.value.toLowerCase().trim();
 
             if (userAnswer === q.answer.toLowerCase()) {
-                feedback.innerHTML = "Bonne réponse ! 🎉";
-                feedback.className = "mt-4 text-green-500 animate-bounce font-bold";
-                input.disabled = true;
-                
-                setTimeout(() => {
-                    alert(q.reveal);
-                    currentQuestionIndex++;
-                    renderQuestion();
-                }, 1000);
+                score++;
+                document.getElementById('live-score').textContent = score;
+                feedback.innerHTML = "Excellent ! +1 point 🌟";
+                feedback.className = "mt-4 text-green-500 font-bold animate-bounce";
+                input.classList.add('border-green-400');
+                proceed();
             } else {
-                feedback.innerHTML = "Mmmh, non... Réessaie ! 🤔";
-                feedback.className = "mt-4 text-red-400 font-bold";
-                input.classList.add('border-red-300');
-                setTimeout(() => input.classList.remove('border-red-300'), 500);
+                attempts++;
+                if (attempts >= 2) {
+                    feedback.innerHTML = "Dommage... On passe à la suivante ⏭️";
+                    feedback.className = "mt-4 text-orange-500 font-bold";
+                    input.classList.add('border-orange-400');
+                    proceed();
+                } else {
+                    feedback.innerHTML = "Faux ! Dernière chance... 🔥";
+                    feedback.className = "mt-4 text-red-400 font-bold animate-pulse";
+                    input.value = "";
+                    input.classList.add('border-red-400');
+                    setTimeout(() => input.classList.remove('border-red-400'), 1000);
+                    document.getElementById('attempts-left').textContent = "Tentative : 2 / 2";
+                }
             }
+        }
+
+        function proceed() {
+            document.getElementById('btn-valider').disabled = true;
+            setTimeout(() => {
+                attempts = 0;
+                currentQuestionIndex++;
+                renderQuestion();
+            }, 1500);
         }
 
         function showFinalMessage() {
             document.getElementById('game-container').classList.add('hidden');
             const final = document.getElementById('final-message');
+            const icon = document.getElementById('result-icon');
+            const title = document.getElementById('result-title');
+            const text = document.getElementById('result-text');
+            
+            document.getElementById('final-score').textContent = score;
             final.classList.remove('hidden');
             setTimeout(() => final.classList.remove('opacity-0'), 100);
+
+            if (score > 3) {
+                // VICTOIRE - FEUX D'ARTIFICE
+                icon.innerHTML = "👑";
+                title.innerHTML = "Bravo Alexia !";
+                text.innerHTML = "Tu es plus que prête pour le Bac. Une vraie championne !";
+                launchFireworks();
+            } else if (score === 3) {
+                // MOYENNE - FELICITATIONS
+                icon.innerHTML = "⚖️";
+                title.innerHTML = "Pas mal !";
+                text.innerHTML = "Tu as la moyenne, mais je sais que tu peux faire encore mieux !";
+            } else {
+                // ECHEC - PLEURS
+                icon.innerHTML = "😭";
+                icon.classList.add('cry-animation');
+                title.innerHTML = "Oh non...";
+                text.innerHTML = "Le Bac approche, il va falloir réviser un peu plus avec moi !";
+            }
+        }
+
+        function launchFireworks() {
+            var duration = 5 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+                var particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: Math.random(), y: Math.random() - 0.2 } }));
+            }, 250);
         }
 
         window.onload = renderQuestion;
