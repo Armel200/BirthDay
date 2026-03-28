@@ -141,19 +141,19 @@
             if (userAnswer === q.answer.toLowerCase()) {
                 score++;
                 document.getElementById('live-score').textContent = score;
-                feedback.innerHTML = "Excellent ! +1 point 🌟";
+                feedback.innerHTML = "ikiiii.. +1 point 🌟";
                 feedback.className = "mt-4 text-green-500 font-bold animate-bounce";
                 input.classList.add('border-green-400');
                 proceed();
             } else {
                 attempts++;
                 if (attempts >= 2) {
-                    feedback.innerHTML = "Dommage... On passe à la suivante ⏭️";
+                    feedback.innerHTML = "Pfff...  passe à la suivante 😂";
                     feedback.className = "mt-4 text-orange-500 font-bold";
                     input.classList.add('border-orange-400');
                     proceed();
                 } else {
-                    feedback.innerHTML = "Faux ! Dernière chance... 🔥";
+                    feedback.innerHTML = "soit pas bete man ! Dernière chance... 😒";
                     feedback.className = "mt-4 text-red-400 font-bold animate-pulse";
                     input.value = "";
                     input.classList.add('border-red-400');
@@ -186,20 +186,20 @@
             if (score > 3) {
                 // VICTOIRE - FEUX D'ARTIFICE
                 icon.innerHTML = "👑";
-                title.innerHTML = "Bravo Alexia !";
-                text.innerHTML = "Tu es plus que prête pour le Bac. Une vraie championne !";
+                title.innerHTML = "Bravo Fillette !";
+                text.innerHTML = "mm comme c'etait facil mais bon et aussi (on est pas amis)";
                 launchFireworks();
             } else if (score === 3) {
                 // MOYENNE - FELICITATIONS
                 icon.innerHTML = "⚖️";
                 title.innerHTML = "Pas mal !";
-                text.innerHTML = "Tu as la moyenne, mais je sais que tu peux faire encore mieux !";
+                text.innerHTML = "tu peux faire mieux man tu es quand quelqu'un marche avec moi le minimum c'est etre inteligent ";
             } else {
                 // ECHEC - PLEURS
                 icon.innerHTML = "😭";
                 icon.classList.add('cry-animation');
-                title.innerHTML = "Oh non...";
-                text.innerHTML = "Le Bac approche, il va falloir réviser un peu plus avec moi !";
+                title.innerHTML = "je savais man tu es harrd 😒😂";
+                text.innerHTML = "de toute facon je m'attendais a ce que tu reussisse pas";
             }
         }
 
