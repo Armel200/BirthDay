@@ -81,6 +81,9 @@
     </style>
 </head>
 <body class="py-10">
+     <audio id="bg-music" loop>
+        <source src="./src/assets/images/deos.MP4" type="video/mp4">
+    </audio>
 
     <a href="parcours.html" class="fixed top-6 left-6 z-50 bg-white/80 backdrop-blur-md p-2 rounded-full shadow-lg text-rose-500 hover:scale-110 transition-transform">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -92,13 +95,16 @@
         <h1 class="text-5xl md:text-6xl font-bold text-rose-600 cursive mb-4 drop-shadow-sm">L'Arbre à Souvenirs</h1>
         <p class="text-rose-500 italic text-lg max-w-xl mx-auto">Parce que chaque moment partagé est une feuille ajoutée à ton histoire.</p>
     </header>
+     <button onclick="startSurprise()" class="mb-[20px] ml-[100px] bg-rose-300 text-center flex hover:bg-rose-400 text-white px-4 py-2 rounded-full shadow-xl transform transition hover:scale-110 text-[12px] font-semibold  items-center gap-3">
+             play music 🎵
+        </button>
 
     <div class="relative max-w-5xl mx-auto px-4 timeline pb-20">
 
         <div class="tree-node node-left flex justify-between items-center w-full mb-16 relative">
             <div class="node-dot hidden md:block"></div> <div class="node-content w-5/12 pr-8 text-right md:ml-auto md:mr-0 order-1 md:order-1">
                 <div class="card relative p-2 bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-shadow border border-rose-100">
-                    <div class="relative group img-container overflow-hidden rounded-xl cursor-pointer" onclick="openLightbox(this.querySelector('img').src, 'Photo 1 : ici je venait de back de younde et tu voulais a tout pris me voir(tuvas jamais accepte mais je m\'en fou)')">
+                    <div class="relative group  img-container overflow-hidden rounded-xl cursor-pointer" onclick="openLightbox(this.querySelector('img').src, 'Photo 1 : ici je venait de back de younde et tu voulais a tout pris me voir(tuvas jamais accepte mais je m\'en fou)')">
                         <img src="./src/assets/images/first.jpg" class="w-full aspect-[4/3] object-cover hover:scale-110 transition-transform duration-700">
                         <div class="absolute inset-0 bg-gradient-to-t from-rose-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
                             <p class="text-white text-lg font-medium">Clique pour agrandir 🔍</p>
@@ -179,6 +185,13 @@
     </div>
 
     <script>
+
+         function startSurprise() {
+            // 1. Lancer la musique
+            const music = document.getElementById('bg-music');
+            music.volume = 1; // Optionnel : met le son à 50% pour ne pas agresser les oreilles
+            music.play().catch(error => console.log("L'audio a été bloqué.", error));
+         }
         // --- ANIMATION AU SCROLL ---
         function checkVisibility() {
             const nodes = document.querySelectorAll('.tree-node');
