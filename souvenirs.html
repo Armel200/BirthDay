@@ -107,58 +107,57 @@
     </div>
 
     <script>
-              const questions = [
-                 {
-                      question: "Mon premier est un animalMon deuxième est une saison Mon troisième est un animal qui vit dans les bois Mon tout est donne une  fêtes  ",
-                      answer: "Anniversaire",
-                      clue: "c'est ce que tu fetes aujourd'hui",
-                      subject: "Charade"
-                  },
-                  {
-                      question: "En 2026 quel aurais-je si je suis nee un demi siecle apres la creation du telephone?",
-                      answer: "17 ans",
-                      clue: "l'ère tant attendu..",
-                      subject: "Logique"
-                  },
-                  {
-                      question: "Si on devait créer un parfum de glace spécial pour tes 17 ans, il y aurait quoi dedans ?",
-                      answer: "Chocolat- caolin 😂",
-                      clue: "Sois créative : chocolat-piment, cookie-marshmallow, ou un truc sain ?",
-                      subject: "Gourmandise"
-                  },
-                  {
-                      question: "C'est quoi ton film ou serie le plus bizzare que jai deja eu a t'envoyer ?",
-                      answer: "After",
-                      clue: "On ne juge pas, promis ! Même si c'est un peu erhotique.",
-                      subject: "Film & Serie"
-                  },
-                  {
-                      question: "Si tu devenais une célébrité demain, pour quelle raison est-ce que tu serais connue ?",
-                      answer: "beaute",
-                      clue: "influenceuse, vie de luxe, celle qui passe le temps a faire les discussion bete bete avec tout le monde ?",
-                      subject: "Délires"
-                  },
-                  {
-                      question: "et pour terminer , Quelle est ton pire voisin dans ce quartier?",
-                      answer: "Armel",
-                      clue: "essaie mm pas de dire mon nom",
-                      subject: "bonus!😆"
-                  }
-              ];
+      const questions = [
+        {
+          question:
+            "Mon premier est un animal ,Mon deuxième est une saison tres froide et Mon troisième est un animal qui vit dans les bois Mon tout est donne une  fêtes  ",
+          answer: "Anniversaire",
+          clue: "c'est ce que tu fetes aujourd'hui",
+          subject: "Charade",
+        },
+        {
+          question:
+            "En 2026, quel age aurais-je si je suis nee un demi siecle apres la creation du telephone?",
+          answer: "17 ans",
+          clue: "l'ère tant attendu..",
+          subject: "Logique",
+        },
+        {
+          question: "Qu’est-ce qui monte mais ne redescend jamais ?",
+          answer: "l'âge",
+          clue: "🕒",
+          subject: "Anniversaire",
+        },
+       
+        {
+          question:
+            "Si tu devenais une célébrité demain, pour quelle raison est-ce que tu serais connue ?",
+          answer: "beaute",
+          clue: "influenceuse, vie de luxe, celle qui passe le temps a faire les discussion bete bete avec tout le monde ?",
+          subject: "Délires",
+        },
+        {
+          question:
+            "et pour terminer , Quelle est ton pire voisin dans ce quartier?",
+          answer: "Armel",
+          clue: "essaie mm pas de dire mon nom",
+          subject: "bonus!😆",
+        },
+      ];
 
-              let currentQuestionIndex = 0;
-              let score = 0;
-              let attempts = 0;
+      let currentQuestionIndex = 0;
+      let score = 0;
+      let attempts = 0;
 
-              function renderQuestion() {
-                  const container = document.getElementById('game-container');
-                  if (currentQuestionIndex >= questions.length) {
-                      showFinalMessage();
-                      return;
-                  }
+      function renderQuestion() {
+        const container = document.getElementById("game-container");
+        if (currentQuestionIndex >= questions.length) {
+          showFinalMessage();
+          return;
+        }
 
-                  const q = questions[currentQuestionIndex];
-                  container.innerHTML = `
+        const q = questions[currentQuestionIndex];
+        container.innerHTML = `
                       <div class="card p-6 md:p-8 rounded-2xl shadow-lg border-rose-200 border transform transition-all">
                           <div class="flex justify-between items-center mb-4">
                               <span class="bg-rose-100 text-rose-600 text-xs font-bold px-2 py-1 rounded uppercase">${q.subject}</span>
@@ -179,105 +178,124 @@
                       </div>
                   `;
 
-                  document.getElementById('btn-valider').onclick = checkAnswer;
-                  document.getElementById('answer-input').onkeypress = (e) => { if (e.key === 'Enter') checkAnswer(); };
-                  document.getElementById('clue-btn').onclick = () => {
-                      document.getElementById('clue-text').textContent = q.clue;
-                      document.getElementById('clue-text').classList.toggle('hidden');
-                  };
-                  document.getElementById('answer-input').focus();
-              }
+        document.getElementById("btn-valider").onclick = checkAnswer;
+        document.getElementById("answer-input").onkeypress = (e) => {
+          if (e.key === "Enter") checkAnswer();
+        };
+        document.getElementById("clue-btn").onclick = () => {
+          document.getElementById("clue-text").textContent = q.clue;
+          document.getElementById("clue-text").classList.toggle("hidden");
+        };
+        document.getElementById("answer-input").focus();
+      }
 
-              function checkAnswer() {
-                  const input = document.getElementById('answer-input');
-                  const feedback = document.getElementById('feedback');
-                  const q = questions[currentQuestionIndex];
-                  const userAnswer = input.value.toLowerCase().trim();
+      function checkAnswer() {
+        const input = document.getElementById("answer-input");
+        const feedback = document.getElementById("feedback");
+        const q = questions[currentQuestionIndex];
+        const userAnswer = input.value.toLowerCase().trim();
 
-                  if (userAnswer === q.answer.toLowerCase()) {
-                      score++;
-                      document.getElementById('live-score').textContent = score;
-                      feedback.innerHTML = "ikiiii.. +1 point 🌟";
-                      feedback.className = "mt-4 text-green-500 font-bold animate-bounce";
-                      input.classList.add('border-green-400');
-                      proceed();
-                  } else {
-                      attempts++;
-                      if (attempts >= 2) {
-                          feedback.innerHTML = "Pfff... passe à la suivante 😂";
-                          feedback.className = "mt-4 text-orange-500 font-bold";
-                          input.classList.add('border-orange-400');
-                          proceed();
-                      } else {
-                          feedback.innerHTML = "soit pas bete man ! Dernière chance... 😒";
-                          feedback.className = "mt-4 text-red-400 font-bold animate-pulse";
-                          input.value = "";
-                          input.classList.add('border-red-400');
-                          setTimeout(() => input.classList.remove('border-red-400'), 1000);
-                          document.getElementById('attempts-left').textContent = "Tentative : 2 / 2";
-                      }
-                  }
-              }
+        if (userAnswer === q.answer.toLowerCase()) {
+          score++;
+          document.getElementById("live-score").textContent = score;
+          feedback.innerHTML = "ikiiii.. +1 point 🌟";
+          feedback.className = "mt-4 text-green-500 font-bold animate-bounce";
+          input.classList.add("border-green-400");
+          proceed();
+        } else {
+          attempts++;
+          if (attempts >= 2) {
+            feedback.innerHTML = "Pfff... passe à la suivante 😂";
+            feedback.className = "mt-4 text-orange-500 font-bold";
+            input.classList.add("border-orange-400");
+            proceed();
+          } else {
+            feedback.innerHTML = "soit pas bete man ! Dernière chance... 😒";
+            feedback.className = "mt-4 text-red-400 font-bold animate-pulse";
+            input.value = "";
+            input.classList.add("border-red-400");
+            setTimeout(() => input.classList.remove("border-red-400"), 1000);
+            document.getElementById("attempts-left").textContent =
+              "Tentative : 2 / 2";
+          }
+        }
+      }
 
-              function proceed() {
-                  document.getElementById('btn-valider').disabled = true;
-                  setTimeout(() => {
-                      attempts = 0;
-                      currentQuestionIndex++;
-                      renderQuestion();
-                  }, 1500);
-              }
+      function proceed() {
+        document.getElementById("btn-valider").disabled = true;
+        setTimeout(() => {
+          attempts = 0;
+          currentQuestionIndex++;
+          renderQuestion();
+        }, 1500);
+      }
 
-              function showFinalMessage() {
-                  document.getElementById('game-container').classList.add('hidden');
-                  const final = document.getElementById('final-message');
-                  const icon = document.getElementById('result-icon');
-                  const title = document.getElementById('result-title');
-                  const text = document.getElementById('result-text');
-                  const listContainer = document.getElementById('answers-list');
+      function showFinalMessage() {
+        document.getElementById("game-container").classList.add("hidden");
+        const final = document.getElementById("final-message");
+        const icon = document.getElementById("result-icon");
+        const title = document.getElementById("result-title");
+        const text = document.getElementById("result-text");
+        const listContainer = document.getElementById("answers-list");
 
-                  // On affiche ici les BONNES réponses définies dans l'objet questions
-                  listContainer.innerHTML = questions.map((q, index) =>
-                      `<li>
+        // On affiche ici les BONNES réponses définies dans l'objet questions
+        listContainer.innerHTML = questions
+          .map(
+            (q, index) =>
+              `<li>
                           <p class="font-semibold text-rose-600">Q${index + 1}. ${q.question}</p>
                           <p class="italic text-gray-600">Réponse attendue : <span class="text-green-600 font-bold">${q.answer}</span></p>
-                      </li>`
-                  ).join('');
+                      </li>`,
+          )
+          .join("");
 
-                  document.getElementById('final-score').textContent = score;
-                  final.classList.remove('hidden');
-                  setTimeout(() => final.classList.remove('opacity-0'), 100);
+        document.getElementById("final-score").textContent = score;
+        final.classList.remove("hidden");
+        setTimeout(() => final.classList.remove("opacity-0"), 100);
 
-                  if (score > 3) {
-                      icon.innerHTML = "👑";
-                      title.innerHTML = "Bravo Fillette !";
-                      text.innerHTML = "mm comme c'etait facil mais bon et aussi (on est pas amis)";
-                      launchFireworks();
-                  } else if (score === 3) {
-                      icon.innerHTML = "⚖️";
-                      title.innerHTML = "Pas mal !";
-                      text.innerHTML = "tu peux faire mieux man tu es quand quelqu'un marche avec moi le minimum c'est etre inteligent ";
-                  } else {
-                      icon.innerHTML = "😭";
-                      icon.classList.add('cry-animation');
-                      title.innerHTML = "je savais man tu es harrd 😒😂";
-                      text.innerHTML = "de toute facon je m'attendais a ce que tu reussisse pas";
-                  }
-              }
+        if (score > 3) {
+          icon.innerHTML = "👑";
+          title.innerHTML = "Bravo Fillette !";
+          text.innerHTML =
+            "mm comme c'etait facil mais bon et aussi (on est pas amis)";
+          launchFireworks();
+        } else if (score === 3) {
+          icon.innerHTML = "⚖️";
+          title.innerHTML = "Pas mal !";
+          text.innerHTML =
+            "tu peux faire mieux man tu es quand quelqu'un marche avec moi le minimum c'est etre inteligent ";
+        } else {
+          icon.innerHTML = "😭";
+          icon.classList.add("cry-animation");
+          title.innerHTML = "je savais man tu es harrd 😒😂";
+          text.innerHTML =
+            "de toute facon je m'attendais a ce que tu reussisse pas";
+        }
+      }
 
-              function launchFireworks() {
-                  var duration = 5 * 1000;
-                  var animationEnd = Date.now() + duration;
-                  var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
-                  var interval = setInterval(function() {
-                      var timeLeft = animationEnd - Date.now();
-                      if (timeLeft <= 0) return clearInterval(interval);
-                      var particleCount = 50 * (timeLeft / duration);
-                      confetti(Object.assign({}, defaults, { particleCount, origin: { x: Math.random(), y: Math.random() - 0.2 } }));
-                  }, 250);
-              }
+      function launchFireworks() {
+        var duration = 5 * 1000;
+        var animationEnd = Date.now() + duration;
+        var defaults = {
+          startVelocity: 30,
+          spread: 360,
+          ticks: 60,
+          zIndex: 1000,
+        };
+        var interval = setInterval(function () {
+          var timeLeft = animationEnd - Date.now();
+          if (timeLeft <= 0) return clearInterval(interval);
+          var particleCount = 50 * (timeLeft / duration);
+          confetti(
+            Object.assign({}, defaults, {
+              particleCount,
+              origin: { x: Math.random(), y: Math.random() - 0.2 },
+            }),
+          );
+        }, 250);
+      }
 
-              window.onload = renderQuestion;
+      window.onload = renderQuestion;
     </script>
   </body>
 </html>
