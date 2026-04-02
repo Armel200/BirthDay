@@ -111,14 +111,14 @@
         {
           question:
             "Mon premier est un animal ,Mon deuxième est une saison tres froide et Mon troisième est un animal qui vit dans les bois Mon tout est donne une  fêtes  ",
-          answer: "Anniversaire",
+          answer: "anniversaire",
           clue: "c'est ce que tu fetes aujourd'hui",
           subject: "Charade",
         },
         {
           question:
             "En 2026, quel age aurais-je si je suis nee un demi siecle apres la creation du telephone?",
-          answer: "17 ans",
+          answer: "17",
           clue: "l'ère tant attendu..",
           subject: "Logique",
         },
@@ -130,16 +130,15 @@
         },
        
         {
-          question:
-            "Si tu devenais une célébrité demain, pour quelle raison est-ce que tu serais connue ?",
-          answer: "beaute",
-          clue: "influenceuse, vie de luxe, celle qui passe le temps a faire les discussion bete bete avec tout le monde ?",
-          subject: "Délires",
-        },
+  question: "Demain tu perces sur les réseaux et tu deviens une star... C’est quoi la raison officielle de ton succès ?",
+  answer: "beauté",
+  clue: "Franchement, avec tes discussions interminables et ton lifestyle de luxe, tu penses que c'est pour ton intelligence ? 😂",
+  subject: "Délires",
+},
         {
           question:
             "et pour terminer , Quelle est ton pire voisin dans ce quartier?",
-          answer: "Armel",
+          answer: "armel",
           clue: "essaie mm pas de dire mon nom",
           subject: "bonus!😆",
         },
@@ -190,37 +189,52 @@
       }
 
       function checkAnswer() {
-        const input = document.getElementById("answer-input");
-        const feedback = document.getElementById("feedback");
-        const q = questions[currentQuestionIndex];
-        const userAnswer = input.value.toLowerCase().trim();
+    const input = document.getElementById("answer-input");
+    const feedback = document.getElementById("feedback");
+    const q = questions[currentQuestionIndex];
+    
+    // 1. On nettoie la réponse utilisateur et la réponse attendue
+    const cleanString = (str) => {
+        return str
+            .toLowerCase()
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Enlève les accents
+            .replace(/^(le |la |les |un |une |l'|d')/g, "")    // Enlève l'article au début
+            .trim();
+    };
 
-        if (userAnswer === q.answer.toLowerCase()) {
-          score++;
-          document.getElementById("live-score").textContent = score;
-          feedback.innerHTML = "ikiiii.. +1 point 🌟";
-          feedback.className = "mt-4 text-green-500 font-bold animate-bounce";
-          input.classList.add("border-green-400");
-          proceed();
-        } else {
-          attempts++;
-          if (attempts >= 2) {
-            feedback.innerHTML = "Pfff... passe à la suivante 😂";
+    const userAnswer = cleanString(input.value);
+    const correctAnswer = cleanString(q.answer);
+
+    // 2. Logique de validation souple
+    // On valide si : c'est exact OR la réponse contient le mot clé OR le mot clé contient la réponse
+    const isCorrect = userAnswer === correctAnswer || 
+                      userAnswer.includes(correctAnswer) || 
+                      correctAnswer.includes(userAnswer) && userAnswer.length > 2;
+
+    if (isCorrect) {
+        score++;
+        document.getElementById("live-score").textContent = score;
+        feedback.innerHTML = "ikiiii.. +1 point 🌟";
+        feedback.className = "mt-4 text-green-500 font-bold animate-bounce";
+        input.classList.add("border-green-400");
+        proceed();
+    } else {
+        attempts++;
+        if (attempts >= 2) {
+            feedback.innerHTML = `Pfff... c'était "${q.answer}" 😂`;
             feedback.className = "mt-4 text-orange-500 font-bold";
             input.classList.add("border-orange-400");
             proceed();
-          } else {
-            feedback.innerHTML = "soit pas bete man ! Dernière chance... 😒";
+        } else {
+            feedback.innerHTML = "soit pas bête man ! Presque... 😒";
             feedback.className = "mt-4 text-red-400 font-bold animate-pulse";
             input.value = "";
             input.classList.add("border-red-400");
             setTimeout(() => input.classList.remove("border-red-400"), 1000);
-            document.getElementById("attempts-left").textContent =
-              "Tentative : 2 / 2";
-          }
+            document.getElementById("attempts-left").textContent = "Tentative : 2 / 2";
         }
-      }
-
+    }
+}
       function proceed() {
         document.getElementById("btn-valider").disabled = true;
         setTimeout(() => {
